@@ -5,10 +5,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.appcompat.view.menu.MenuView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import kg.geektech.lesson14.R
 import kg.geektech.lesson14.databinding.FragmentHomeBinding
+import kg.geektech.lesson14.models.News
 
 class HomeFragment : Fragment() {
 
@@ -17,7 +20,16 @@ class HomeFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var adapter : NewsAdapter
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        adapter = NewsAdapter {
+            val news = adapter.getItem(it)
+            Toast.makeText(requireContext(), news.title, Toast.LENGTH_SHORT).show()
+        }
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -31,15 +43,24 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.fab.setOnClickListener{
+        binding.fab.setOnClickListener {
             findNavController().navigate(R.id.newFragment)
         }
-        parentFragmentManager.setFragmentResultListener("rk_news",viewLifecycleOwner){
-                _, bundle ->
-            val text = bundle.getString("text")
-            Log.e("Home","text=$text")
-        }
+
+
+            parentFragmentManager.setFragmentResultListener(
+                "rk_news",
+                viewLifecycleOwner
+            ) { _, bundle ->
+                val news = bundle.getSerializable("news") as News
+                Log.e("Home", "text=$news")
+                adapter.addItem(news)
+            }
+
+            binding.recyclerView.adapter = adapter
+
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

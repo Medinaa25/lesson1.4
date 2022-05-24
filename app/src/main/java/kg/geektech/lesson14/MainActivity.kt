@@ -1,8 +1,10 @@
 package kg.geektech.lesson14
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -37,7 +39,19 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController,appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+            val fragment = arrayListOf(R.id.navigation_home,R.id.navigation_notifications,R.id.navigation_dashboard,R.id.navigation_profile)
+            if (fragment.contains(destination.id)){
+                navView.visibility = View.VISIBLE
+            }else{
+                navView.visibility = View.GONE
+
+            }
+            }
+
     }
+
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp()

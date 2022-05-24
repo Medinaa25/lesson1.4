@@ -1,14 +1,14 @@
 package kg.geektech.lesson14
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import kg.geektech.lesson14.databinding.FragmentHomeBinding
 import kg.geektech.lesson14.databinding.FragmentNewBinding
+import kg.geektech.lesson14.models.News
 
 class NewFragment : Fragment() {
     private var _binding: FragmentNewBinding? = null
@@ -16,6 +16,7 @@ class NewFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,7 +34,8 @@ class NewFragment : Fragment() {
 
     private fun save() {
         val text = binding.editText.text.toString()
-        val bundle = bundleOf("text" to text )
+        val news = News(text, System.currentTimeMillis())
+        val bundle = bundleOf("news" to news )
         parentFragmentManager.setFragmentResult("rk_new",bundle)
         findNavController().navigateUp()
     }
